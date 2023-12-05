@@ -29,12 +29,34 @@ fs.promises
       };
     })
   )
-  .then((games) =>
-    games.filter(({ runs }) =>
-      runs.every((bag) =>
-        Object.entries(bag).every(([id, c]) => c <= params[id])
+  .then((games) => {
+    const validSum = games
+      .filter(({ runs }) =>
+        runs.every((bag) =>
+          Object.entries(bag).every(([id, c]) => c <= params[id])
+        )
       )
-    )
-  )
-  .then((s) => s.reduce((a, { id }) => a + id, 0))
+      .reduce((a, { id }) => a + id, 0);
+    const powerSum = games
+      .map(({ runs }) =>
+        Object.values(
+          runs.reduce(
+            (a, b) =>
+              Object.fromEntries(
+                Object.entries(a).map(([k, n]) => [k, Math.max(n, b[k] || 0)])
+              ),
+            {
+              red: 0,
+              green: 0,
+              blue: 0,
+            }
+          )
+        ).reduce((a, b) => a * b, 1)
+      )
+      .reduce((a, b) => a + b, 0);
+    return {
+      validSum,
+      powerSum,
+    };
+  })
   .then(console.log);
