@@ -6,11 +6,6 @@ const INPUT_SRC = path.resolve(
   process.argv.slice(2).at(0) || "input.txt"
 );
 
-const run = (hold, move) => ({
-  ms: hold + move,
-  mm: hold * move,
-});
-
 const sol = (T, D) =>
   ((opt) =>
     1 + Math.ceil(Math.max(...opt) - 1) - Math.floor(Math.min(...opt) + 1))([
